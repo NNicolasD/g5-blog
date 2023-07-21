@@ -12,9 +12,15 @@ class CrearArticuloView(generic.CreateView):
     form_class = CrearArticuloForm
 
     def get_success_url(self):
-        return reverse('blog:home')
+        return reverse('articulos:list-articles')
 
     def form_valid(self, form):
         f = form.save(commit=False)
         f.autor_id = self.request.user.id
         return super().form_valid(f)
+    
+class ListaArticulosView(generic.ListView):
+    model = Articulo
+    template_name = 'blog/articles.html'
+    context_object_name = 'articulos'
+    paginate_by = 25

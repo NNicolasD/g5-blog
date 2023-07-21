@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block title %} Artículos {% endblock %}
+{% block content %}
+    <h2>Lista de artículos</h2>
+
+    <ul>
+        <a href="{% url 'articulos:create-article' %}" class="btn btn-success mb-3">Crear un nuevo artículo</a>
+        {% for articulo in articulos %}
+            <li>
+                <div class="container">
+                <div class="row">
+                    {{ articulo.creacion|date:"d/m/Y" }}
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="card">
+                    {% if articulo.imagen %}
+                        <img src="{{ articulo.imagen.url }}" class="card-img-top" alt="Articulo Image">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ articulo.titulo }}</h5>
+                        <p class="card-text">{{ articulo.bajada }}</p>
+                        <p class="card-text">Autor: {{ articulo.autor }}</p>
+                        <p class="card-text">Categoria: <a href="">{{ articulo.categoria }}</a></p>
+                        <a href="" class="btn btn-success">Ver más</a>
+                        <a href="" class="btn btn-success">Editar</a>
+                        <a href="" class="btn btn-danger">Eliminar posteo</a>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </li>
+        {% empty %}
+        {% endfor %}
+    </ul>
+        
+    {% if is_paginated %}
+        <div class="pagination">
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+            {% endif %}
+
+            {% for page in paginator.page_range %}
+                {% if page == page_obj.number %}
+                    <span class="current-page">{{ page }}</span>
+                {% else %}
+                    <a href="?page={{ page }}">{{ page }}</a>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">Siguiente</a>
+            {% endif %}
+        </div>
+    {% endif %}
+{% endblock content %}
