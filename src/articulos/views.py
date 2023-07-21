@@ -41,6 +41,11 @@ class EliminarArticuloView(generic.DeleteView):
     def get_success_url(self):
         return reverse('articulos:list-articles')
     
+class DetalleArticuloView(generic.DetailView):
+    template_name = 'blog/detail_article.html'
+    model = Articulo
+    context_object_name = 'articulo'
+    
 class CategoryView(generic.TemplateView):
     template_name = 'blog/category.html'
 

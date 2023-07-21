@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %} {{ articulo.titulo }} {% endblock %}
+
+{% block content %}
+
+<article class="article-detail">
+    <h2>{{ articulo.titulo }}</h2>
+    <p>{{ articulo.bajada }}</p>
+    {% if articulo.imagen %}
+        <img src="{{ articulo.imagen.url }}" alt="{{ articulo.titulo }}" class="img-fluid">
+    {% endif %}
+    <div class="contenido">
+        {{ articulo.contenido | safe }}
+    </div>
+    <p>Autor: {{ articulo.autor }}</p>
+    <p>Categoría: <a href="{% url 'articulos:category' articulo.categoria|slugify %}">{{ articulo.categoria }}</a></p>
+    <p>Etiquetas:</p>
+    <ul>
+        {% for etiqueta in articulo.etiqueta.all %}
+            <li>{{ etiqueta }}</li>
+        {% endfor %}
+    </ul>
+    <p>Fecha de publicación: {{ articulo.creacion|date:"d/m/Y H:i" }}</p>
+    <p>Última actualización: {{ articulo.actualizacion|date:"d/m/Y H:i" }}</p>
+    <div class="article-buttons">
+        <a href="{% url 'articulos:edit-article' articulo.id %}" class="btn btn-success">Editar</a>
+        <a href="{% url 'articulos:delete-article' articulo.id %}" class="btn btn-danger">Eliminar posteo</a>
+    </div>
+</article>
+
+{% endblock content %}
