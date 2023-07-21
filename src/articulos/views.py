@@ -1,9 +1,9 @@
 from django.shortcuts import render
 from django.views import generic
-from .models import Articulo, Categoria
-from .forms import CrearArticuloForm
+from .models import Articulo, Categoria, Comentario
+from .forms import CrearArticuloForm, CrearComentarioForm
 from django.urls import reverse
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 
 # Create your views here.
 
@@ -45,6 +45,39 @@ class DetalleArticuloView(generic.DetailView):
     template_name = 'blog/detail_article.html'
     model = Articulo
     context_object_name = 'articulo'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)    
+        context['formulario_comentario'] = CrearComentarioForm()
+        return context       
+
+    def post(self, request, *args, **kwargs):
+        articulo = self.get_object()
+        form = CrearComentarioForm(request.POST)
+
+        if form.is_valid():
+            comentario = form.save(commit=False)
+            comentario.user_id = self.request.user.id
+            comentario.articulo = articulo
+            comentario.save()
+            return redirect('articulos:detail-article', pk=articulo.pk)
+        else:
+            return super().get(request)
+        
+class EditarComentarioView(generic.UpdateView):
+    model = Comentario
+    template_name = 'blog/edit_comment.html'     
+    fields = ['texto']  
+    
+    def get_success_url(self):
+        return reverse('articulos:detail-article', args = [self.object.articulo.id])
+        
+class EliminarComentarioView(generic.DeleteView):
+    model = Comentario
+    template_name = 'blog/delete_comment.html'       
+    
+    def get_success_url(self):
+        return reverse('articulos:detail-article', args = [self.object.articulo.id])
     
 class CategoryView(generic.TemplateView):
     template_name = 'blog/category.html'

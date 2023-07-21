@@ -29,4 +29,24 @@
     </div>
 </article>
 
+<article class="card">
+    <h4>Comentarios</h4>
+    <form method="post">{% csrf_token %}
+        {{ formulario_comentario }}
+        <button type="submit">Comentar</button>
+    {% for comentario in articulo.comentario_set.all %}
+        <div class="comentario">
+            <h5>{{comentario.user.username}}</h5>
+            <p><small>{{ articulo.creacion|date:"d/m/Y H:i" }}</p></small>   
+            <p>{{comentario.texto}}</p>               
+            <a href="{% url 'articulos:edit-comment' comentario.id %}">Editar<i class="fa-solid fa-trash"></i></a>
+            <a href="{% url 'articulos:delete-comment' comentario.id %}">Eliminar<i class="fa-solid fa-trash"></i></a>
+        </div>
+    {% empty %}
+        <p>No hay comentarios</p>
+    {% endfor %}
+  </div>
+  </form>
+</article>
+
 {% endblock content %}

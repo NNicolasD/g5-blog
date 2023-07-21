@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Categoria, Articulo, Etiqueta
+from .models import Categoria, Articulo, Etiqueta, Comentario
 
 class CategoriaAdmin(admin.ModelAdmin):
     list_display = ('nombre', 'activo')
@@ -26,7 +26,13 @@ class ArticuloAdmin(admin.ModelAdmin):
         comments = instance.get_comments()
         return ', '.join(str(comment) for comment in comments)
     get_comments.short_description = 'Comentarios'
+    
+class ComentarioAdmin(admin.ModelAdmin):
+    list_display = ('texto', 'user', 'articulo', 'creacion')
+    list_filter = ('user', 'articulo')
+    search_fields = ('texto',)
 
 admin.site.register(Categoria, CategoriaAdmin)
 admin.site.register(Articulo, ArticuloAdmin)
 admin.site.register(Etiqueta, EtiquetaAdmin)
+admin.site.register(Comentario, ComentarioAdmin)

@@ -53,3 +53,20 @@ class Articulo(models.Model):
 
     def get_absolute_url(self):
         return reverse('blog:details', kwargs={ 'id': self.id })
+
+    def get_comments(self):
+        return self.comentario__set.all()
+    
+class Comentario(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    articulo = models.ForeignKey(Articulo, on_delete=models.CASCADE)
+    texto = models.CharField(max_length=500, blank=True, default="")
+    
+    creacion = models.DateTimeField(auto_now_add=True)
+    actualizacion = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-creacion']
+
+    def __str__(self):
+        return self.texto

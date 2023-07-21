@@ -1,5 +1,5 @@
 from django import forms
-from .models import Articulo
+from .models import Articulo, Comentario
 from ckeditor.widgets import CKEditorWidget
 
 class CrearArticuloForm(forms.ModelForm):    
@@ -16,4 +16,17 @@ class CrearArticuloForm(forms.ModelForm):
             'publicado': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'categoria' : forms.Select(attrs={'class' : 'form-select'}),
             'etiqueta': forms.CheckboxSelectMultiple
+        }
+        
+class CrearComentarioForm(forms.ModelForm):
+    class Meta:
+        model = Comentario
+        fields = ['texto']
+        
+        labels = {
+            'texto': ''
+        }
+        
+        widgets = {
+            'texto' : forms.TextInput(attrs= {'class' : 'form-control', 'placeholder' : 'Escribe un comentario'})
         }
