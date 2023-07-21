@@ -24,3 +24,18 @@ class ListaArticulosView(generic.ListView):
     template_name = 'blog/articles.html'
     context_object_name = 'articulos'
     paginate_by = 25
+
+class EditarArticuloView(generic.UpdateView):
+    model = Articulo
+    template_name = 'blog/edit_article.html'
+    form_class = CrearArticuloForm
+
+    def get_success_url(self):
+        return reverse('articulos:list-articles')
+    
+class EliminarArticuloView(generic.DeleteView):
+    model = Articulo
+    template_name = 'blog/delete_article.html'
+
+    def get_success_url(self):
+        return reverse('articulos:list-articles')

@@ -22,8 +22,8 @@
                         <p class="card-text">Autor: {{ articulo.autor }}</p>
                         <p class="card-text">Categoria: <a href="">{{ articulo.categoria }}</a></p>
                         <a href="" class="btn btn-success">Ver más</a>
-                        <a href="" class="btn btn-success">Editar</a>
-                        <a href="" class="btn btn-danger">Eliminar posteo</a>
+                        <a href="{% url 'articulos:edit-article' articulo.id %}" class="btn btn-success">Editar</a>
+                        <a href="{% url 'articulos:delete-article' articulo.id %}" class="btn btn-danger">Eliminar posteo</a>
                     </div>
                     </div>
                 </div>
