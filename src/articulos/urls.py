@@ -8,4 +8,6 @@ urlpatterns = [
     path('list-articles/', ListaArticulosView.as_view(), name='list-articles'),
     path('edit-article/<int:pk>', EditarArticuloView.as_view(), name = 'edit-article'),
     path('delete-article/<int:pk>', EliminarArticuloView.as_view(), name = 'delete-article'),
+    path('category/<str:category>/', CategoryView.as_view(), name='category'),
+    path('category/', CategoryListView.as_view(), name='category-list'),
 ]
