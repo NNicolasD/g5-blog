@@ -1,0 +1,19 @@
+/*
+color-scheme:
+#00308F
+#0AA456
+#FF5608
+#FB2121
+*/
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Roboto, Oxygen, sans-serif
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+}
