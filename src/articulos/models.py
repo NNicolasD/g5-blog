@@ -4,10 +4,9 @@ from django.db import models
 from django.db import models
 from ckeditor.fields import RichTextField
 from django.urls import reverse
-from django.contrib.auth.models import User
-#from django.conf import settings
+from django.conf import settings
 
-#User = settings.AUTH_USER_MODEL
+User = settings.AUTH_USER_MODEL
 
 
 class NombreEstado(models.Model):

@@ -27,6 +27,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+AUTH_USER_MODEL = 'usuarios.Usuario'
+
 CKEDITOR_CONFIGS = {
     'default': {
         'toolbar': 'full',
