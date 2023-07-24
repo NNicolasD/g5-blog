@@ -2,17 +2,14 @@
 {% block title %} {{ category }} {% endblock %}
 {% block content %}
     {% if category_article %}
-        <h2>{{ category }}</h2>
-        <ul>
-            {% if user.is_superuser or user.es_colaborador %}
-                <a href="{% url 'articulos:create-article' %}" class="btn btn-success mb-3">Crear un nuevo artículo</a>
-            {% endif %}
-            {% for articulo in category_article %}
-                <li>
-                <div class="container">
-                    <div class="row">
-                        {{ articulo.creacion|date:"d/m/Y" }}
-                    </div>
+    <div class="container">
+        <h2 class="mt-3">{{ category }}</h2>
+
+        {% if user.is_superuser or user.es_colaborador %}
+            <a href="{% url 'articulos:create-article' %}" class="btn btn-success mb-3">Crear un nuevo artículo</a>
+        {% endif %}
+            <div class="row">
+                {% for articulo in category_article %}
                     <div class="col-md-6 mb-4">
                         <div class="card">
                             {% if articulo.imagen %}
@@ -30,10 +27,10 @@
                             </div>
                         </div>
                     </div>
-                </div>
-            </li>
-            {% endfor %}
-        </ul>
+                {% empty %}
+                    <p>No hay artículos disponibles.</p>
+                {% endfor %}
+            </div>
     {% else %}
         <h2>Esta categoría no contiene ningún artículo</h2>
         {% if user.is_superuser or user.es_colaborador %}
@@ -42,22 +39,24 @@
     {% endif %}
         
     {% if is_paginated %}
-        <div class="pagination">
-            {% if page_obj.has_previous %}
-                <a href="?page={{ page_obj.previous_page_number }}">Anterior</a>
-            {% endif %}
-
-            {% for page in paginator.page_range %}
-                {% if page == page_obj.number %}
-                    <span class="current-page">{{ page }}</span>
-                {% else %}
-                    <a href="?page={{ page }}">{{ page }}</a>
+        <div class="container">
+            <div class="pagination">
+                {% if page_obj.has_previous %}
+                    <a href="?page={{ page_obj.previous_page_number }}">Anterior</a>
                 {% endif %}
-            {% endfor %}
 
-            {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}">Siguiente</a>
-            {% endif %}
+                {% for page in paginator.page_range %}
+                    {% if page == page_obj.number %}
+                        <span class="current-page">{{ page }}</span>
+                    {% else %}
+                        <a href="?page={{ page }}">{{ page }}</a>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">Siguiente</a>
+                {% endif %}
+            </div>
         </div>
     {% endif %}
 {% endblock content %}

@@ -1,4 +1,37 @@
 {% extends "base.html" %}
 {% block title %} Inicio {% endblock  %}
 {% block content %}
+
+
+<main>
+    <section>
+        <div class="container">
+        <h1 class="mt-3">Bienvenido al Blog DeFi</h2>
+        
+        {% if articulos %}          
+
+        <h2 class="mt-3">Artículos Recientes</h2>
+        <div class="row">
+            {% for articulo in articulos %}
+                <div class="col-md-6 mb-4">
+                    <div class="card">
+                        {% if articulo.imagen %}
+                            <img src="{{ articulo.imagen.url }}" class="card-img-top" alt="Articulo Image">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ articulo.titulo }}</h5>
+                            <p class="card-text">{{ articulo.bajada }}</p>
+                            <p class="card-text">Autor: {{ articulo.autor }}</p>
+                            <p class="card-text">Categoria: <a href="{% url 'articulos:category' articulo.categoria|slugify %}">{{ articulo.categoria }}</a></p>
+                            <a href="{% url 'articulos:detail-article' articulo.id %}" class="btn btn-success">Ver más</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        </div>
+    </section>
+</main>
+
 {% endblock content %}
