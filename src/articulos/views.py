@@ -4,10 +4,12 @@ from .models import Articulo, Categoria, Comentario
 from .forms import CrearArticuloForm, CrearComentarioForm
 from django.urls import reverse
 from django.shortcuts import get_object_or_404, redirect
+from django.contrib.auth.mixins import LoginRequiredMixin
+from .mixins import ArticulosMixin, ComentariosMixin
 
 # Create your views here.
 
-class CrearArticuloView(generic.CreateView):
+class CrearArticuloView(ArticulosMixin, LoginRequiredMixin, generic.CreateView):
     model = Articulo
     template_name = 'blog/create_article.html'
     form_class = CrearArticuloForm
@@ -26,7 +28,7 @@ class ListaArticulosView(generic.ListView):
     context_object_name = 'articulos'
     paginate_by = 25
 
-class EditarArticuloView(generic.UpdateView):
+class EditarArticuloView(ArticulosMixin, LoginRequiredMixin, generic.UpdateView):
     model = Articulo
     template_name = 'blog/edit_article.html'
     form_class = CrearArticuloForm
@@ -34,7 +36,7 @@ class EditarArticuloView(generic.UpdateView):
     def get_success_url(self):
         return reverse('articulos:list-articles')
     
-class EliminarArticuloView(generic.DeleteView):
+class EliminarArticuloView(ArticulosMixin, LoginRequiredMixin, generic.DeleteView):
     model = Articulo
     template_name = 'blog/delete_article.html'
 
@@ -64,7 +66,7 @@ class DetalleArticuloView(generic.DetailView):
         else:
             return super().get(request)
         
-class EditarComentarioView(generic.UpdateView):
+class EditarComentarioView(ComentariosMixin, LoginRequiredMixin, generic.UpdateView):
     model = Comentario
     template_name = 'blog/edit_comment.html'     
     fields = ['texto']  
@@ -72,7 +74,7 @@ class EditarComentarioView(generic.UpdateView):
     def get_success_url(self):
         return reverse('articulos:detail-article', args = [self.object.articulo.id])
         
-class EliminarComentarioView(generic.DeleteView):
+class EliminarComentarioView(ComentariosMixin, LoginRequiredMixin, generic.DeleteView):
     model = Comentario
     template_name = 'blog/delete_comment.html'       
     

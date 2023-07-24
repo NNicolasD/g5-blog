@@ -4,7 +4,9 @@
     {% if category_article %}
         <h2>{{ category }}</h2>
         <ul>
-            <a href="{% url 'articulos:create-article' %}" class="btn btn-success mb-3">Crear un nuevo artículo</a>
+            {% if user.is_superuser or user.es_colaborador %}
+                <a href="{% url 'articulos:create-article' %}" class="btn btn-success mb-3">Crear un nuevo artículo</a>
+            {% endif %}
             {% for articulo in category_article %}
                 <li>
                 <div class="container">
@@ -20,9 +22,11 @@
                                 <h5 class="card-title">{{ articulo.titulo }}</h5>
                                 <p class="card-text">{{ articulo.bajada }}</p>
                                 <p class="card-text">Autor: {{ articulo.autor }}</p>
-                                <a href="" class="btn btn-success">Ver más</a>
-                                <a href="{% url 'articulos:edit-article' articulo.id %}" class="btn btn-success">Editar</a>
-                                <a href="{% url 'articulos:delete-article' articulo.id %}" class="btn btn-danger">Eliminar posteo</a>
+                                <a href="{% url 'articulos:detail-article' articulo.id %}" class="btn btn-success">Ver más</a>
+                                {% if user.is_superuser or user.es_colaborador %}
+                                    <a href="{% url 'articulos:edit-article' articulo.id %}" class="btn btn-success">Editar</a>
+                                    <a href="{% url 'articulos:delete-article' articulo.id %}" class="btn btn-danger">Eliminar posteo</a>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
@@ -32,7 +36,9 @@
         </ul>
     {% else %}
         <h2>Esta categoría no contiene ningún artículo</h2>
+        {% if user.is_superuser or user.es_colaborador %}
         <a href="{% url 'articulos:create-article' %}" class="btn btn-success mb-3">Crear un nuevo artículo</a>
+        {% endif %}
     {% endif %}
         
     {% if is_paginated %}
