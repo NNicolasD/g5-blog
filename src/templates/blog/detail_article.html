@@ -1,16 +1,17 @@
 {% extends 'base.html' %}
 
-{% block title %} {{ articulo.titulo }} {% endblock %}
+{% block title %}{{ articulo.titulo }}{% endblock %}
+
 
 {% block content %}
 
-<article class="article-detail">
+<article class="container">
     <h2>{{ articulo.titulo }}</h2>
     <p>{{ articulo.bajada }}</p>
     {% if articulo.imagen %}
         <img src="{{ articulo.imagen.url }}" alt="{{ articulo.titulo }}" class="img-fluid">
     {% endif %}
-    <div class="contenido">
+    <div>
         {{ articulo.contenido | safe }}
     </div>
     <p>Autor: {{ articulo.autor }}</p>
@@ -24,38 +25,44 @@
     <p>Fecha de publicación: {{ articulo.creacion|date:"d/m/Y H:i" }}</p>
     <p>Última actualización: {{ articulo.actualizacion|date:"d/m/Y H:i" }}</p>
     {% if user.is_superuser or user.es_colaborador %}
-        <div class="article-buttons">
+        <div class="btn-group">
             <a href="{% url 'articulos:edit-article' articulo.id %}" class="btn btn-success">Editar</a>
             <a href="{% url 'articulos:delete-article' articulo.id %}" class="btn btn-danger">Eliminar posteo</a>
         </div>
     {% endif %}
 </article>
 
-<article class="card">
+<article class="container">
     <h2>Comentarios</h2>
     {% if user.is_authenticated %}
-        <form method="post">{% csrf_token %}
+        <form method="post" class="mb-4">{% csrf_token %}
             {{ formulario_comentario }}
-            <button type="submit">Comentar</button>
+            <button type="submit" class="btn btn-sm btn-primary">Comentar</button>
+        </form>
     {% else %}
         <p>Debes iniciar sesión para comentar.</p>
-        <a href="{% url 'login' %}">Iniciar sesión</a>
+        <a href="{% url 'login' %}" class="btn btn-sm btn-primary">Iniciar sesión</a>
     {% endif %}
     {% for comentario in articulo.comentario_set.all %}
-        <div class="comentario">
-            <h5>{{comentario.user.username}}</h5>
-            <p><small>{{ articulo.creacion|date:"d/m/Y H:i" }}</p></small>   
-            <p>{{comentario.texto}}</p>       
-            {% if user.is_superuser or user.es_colaborador or user == comentario.user %}        
-                <a href="{% url 'articulos:edit-comment' comentario.id %}">Editar<i class="fa-solid fa-trash"></i></a>
-                <a href="{% url 'articulos:delete-comment' comentario.id %}">Eliminar<i class="fa-solid fa-trash"></i></a>
-            {% endif %}
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">{{comentario.user.username}}</h5>
+                <p class="card-text"><small>{{ articulo.creacion|date:"d/m/Y H:i" }}</small></p>
+                <p class="card-text">{{comentario.texto}}</p>
+                {% if user.is_superuser or user.es_colaborador or user == comentario.user %}
+                    <a href="{% url 'articulos:edit-comment' comentario.id %}" class="btn btn-sm btn-success">Editar</a>
+                    <a href="{% url 'articulos:delete-comment' comentario.id %}" class="btn btn-sm btn-danger">Eliminar</a>
+                {% endif %}
+            </div>
         </div>
     {% empty %}
         <p>No hay comentarios</p>
     {% endfor %}
-  </div>
-  </form>
 </article>
 
 {% endblock content %}
+
+{% block extra_js %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbH+8FAdyNW2DxH1uq9Wrj6w2Rs24q7tpj5skxIM7" crossorigin="anonymous"></script>
+{% endblock %}

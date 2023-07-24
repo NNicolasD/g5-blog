@@ -3,11 +3,22 @@
 {% block content %}
 
 {% if category_list %}   
-    <h2>Categorías</h2>
-        {% for category in category_list %}           
-            <h4 class="card-title"><a href="{% url 'articulos:category' category.nombre|slugify %}">{{ category.nombre }}</a></h5>
-        {% endfor %}
+    <div class="container mt-4">
+        <h2>Categorías</h2>
+        <ul class="list-group">
+            {% for category in category_list %}
+                <li class="list-group-item">
+                    <h4>
+                        <a href="{% url 'articulos:category' category.nombre|slugify %}">{{ category.nombre }}</a>
+                    </h4>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
 {% else %}
-    <h2>No hay categorías</h2>
+    <div class="container mt-4">
+        <h2>No hay categorías</h2>
+    </div>
 {% endif %}
+
 {% endblock content %}
