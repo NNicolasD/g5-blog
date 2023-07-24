@@ -16,12 +16,14 @@
     </div>
     <p>Autor: {{ articulo.autor }}</p>
     <p>Categoría: <a href="{% url 'articulos:category' articulo.categoria|slugify %}">{{ articulo.categoria }}</a></p>
+    {% if articulo.etiqueta.exists %}
     <p>Etiquetas:</p>
     <ul>
         {% for etiqueta in articulo.etiqueta.all %}
             <li>{{ etiqueta }}</li>
         {% endfor %}
     </ul>
+    {% endif %}
     <p>Fecha de publicación: {{ articulo.creacion|date:"d/m/Y H:i" }}</p>
     <p>Última actualización: {{ articulo.actualizacion|date:"d/m/Y H:i" }}</p>
     {% if user.is_superuser or user.es_colaborador %}

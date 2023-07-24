@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Eliminar Artículo{% endblock %}
+{% block title %}Eliminar Categoría{% endblock %}
 
 {% block content %}
     <div class="container">
@@ -8,7 +8,7 @@
             <div class="col-md-6">
                 <form method="post">
                     {% csrf_token %}
-                    <h2>¿Estás seguro que deseas eliminar este artículo?</h2>
+                    <h2>¿Estás seguro que deseas eliminar esta categoría?</h2>
                     <button type="submit" class="btn btn-danger">Eliminar</button>
                 </form>
             </div>

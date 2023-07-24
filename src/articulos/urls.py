@@ -13,4 +13,7 @@ urlpatterns = [
     path('delete-comment/<int:pk>', EliminarComentarioView.as_view(), name = 'delete-comment'),
     path('category/<str:category>/', CategoryView.as_view(), name='category'),
     path('category/', CategoryListView.as_view(), name='category-list'),
+    path('create-category/', CrearCategoriaView.as_view(), name='create-category'),
+    path('edit-category/<int:pk>', EditarCategoriaView.as_view(), name = 'edit-category'),
+    path('delete-category/<int:pk>', EliminarCategoriaView.as_view(), name = 'delete-category'),
 ]

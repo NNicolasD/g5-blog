@@ -1,5 +1,5 @@
 from django import forms
-from .models import Articulo, Comentario
+from .models import Articulo, Comentario, Categoria
 from ckeditor.widgets import CKEditorWidget
 
 class CrearArticuloForm(forms.ModelForm):    
@@ -28,4 +28,14 @@ class CrearComentarioForm(forms.ModelForm):
         
         widgets = {
             'texto' : forms.TextInput(attrs= {'class' : 'form-control', 'placeholder' : 'Escribe un comentario'})
+        }
+        
+class CrearCategoriaForm(forms.ModelForm):
+    class Meta:
+        model = Categoria
+        fields = ['nombre']
+        
+        
+        widgets = {
+            'texto' : forms.TextInput(attrs= {'class' : 'form-control'})
         }

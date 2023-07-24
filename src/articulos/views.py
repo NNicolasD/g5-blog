@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views import generic
 from .models import Articulo, Categoria, Comentario
-from .forms import CrearArticuloForm, CrearComentarioForm
+from .forms import CrearArticuloForm, CrearComentarioForm, CrearCategoriaForm
 from django.urls import reverse
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -101,3 +101,26 @@ class CategoryListView(generic.ListView):
     def get_queryset(self):
         queryset = super().get_queryset()
         return queryset
+    
+class CrearCategoriaView(ArticulosMixin, LoginRequiredMixin, generic.CreateView):
+    model = Categoria
+    template_name = 'blog/create_category.html'
+    form_class = CrearCategoriaForm
+
+    def get_success_url(self):
+        return reverse('articulos:category-list')
+    
+class EditarCategoriaView(ArticulosMixin, LoginRequiredMixin, generic.UpdateView):
+    model = Categoria
+    template_name = 'blog/edit_category.html'
+    form_class = CrearCategoriaForm
+    
+    def get_success_url(self):
+        return reverse('articulos:category-list') 
+    
+class EliminarCategoriaView(ArticulosMixin, LoginRequiredMixin, generic.DeleteView):
+    model = Categoria
+    template_name = 'blog/delete_category.html'
+
+    def get_success_url(self):
+        return reverse('articulos:category-list')
