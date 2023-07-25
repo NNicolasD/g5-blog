@@ -13,17 +13,21 @@
         <h2 class="mt-3">Artículos Recientes</h2>
         <div class="row">
             {% for articulo in articulos %}
-                <div class="col-md-6 mb-4">
-                    <div class="card">
+                <div class="col-lg-8">
+                    <div class="card mb-4">
                         {% if articulo.imagen %}
-                            <img src="{{ articulo.imagen.url }}" class="card-img-top" alt="Articulo Image">
+                            <img class="card-img-top" src="{{ articulo.imagen.url }}" class="card-img-top" alt="{{ articulo.titulo }}">
                         {% endif %}
                         <div class="card-body">
-                            <h5 class="card-title">{{ articulo.titulo }}</h5>
+                            <h2 class="card-title h4">{{ articulo.titulo }}</h2>
                             <p class="card-text">{{ articulo.bajada }}</p>
                             <p class="card-text">Autor: {{ articulo.autor }}</p>
                             <p class="card-text">Categoria: <a href="{% url 'articulos:category' articulo.categoria|slugify %}">{{ articulo.categoria }}</a></p>
-                            <a href="{% url 'articulos:detail-article' articulo.id %}" class="btn btn-success">Ver más</a>
+                            <a href="{% url 'articulos:detail-article' articulo.id %}" class="btn btn-primary">Ver más</a>
+                            {% if user.is_superuser or user.es_colaborador %}
+                                <a href="{% url 'articulos:edit-article' articulo.id %}" class="btn btn-success">Editar</a>
+                                <a href="{% url 'articulos:delete-article' articulo.id %}" class="btn btn-danger">Eliminar</a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>

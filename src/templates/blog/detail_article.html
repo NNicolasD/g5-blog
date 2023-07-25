@@ -2,69 +2,113 @@
 
 {% block title %}{{ articulo.titulo }}{% endblock %}
 
-
 {% block content %}
 
-<article class="container">
-    <h2>{{ articulo.titulo }}</h2>
-    <p>{{ articulo.bajada }}</p>
-    {% if articulo.imagen %}
-        <img src="{{ articulo.imagen.url }}" alt="{{ articulo.titulo }}" class="img-fluid">
-    {% endif %}
-    <div>
-        {{ articulo.contenido | safe }}
-    </div>
-    <p>Autor: {{ articulo.autor }}</p>
-    <p>Categoría: <a href="{% url 'articulos:category' articulo.categoria|slugify %}">{{ articulo.categoria }}</a></p>
-    {% if articulo.etiqueta.exists %}
-    <p>Etiquetas:</p>
-    <ul>
-        {% for etiqueta in articulo.etiqueta.all %}
-            <li>{{ etiqueta }}</li>
-        {% endfor %}
-    </ul>
-    {% endif %}
-    <p>Fecha de publicación: {{ articulo.creacion|date:"d/m/Y H:i" }}</p>
-    <p>Última actualización: {{ articulo.actualizacion|date:"d/m/Y H:i" }}</p>
-    {% if user.is_superuser or user.es_colaborador %}
-        <div class="btn-group">
-            <a href="{% url 'articulos:edit-article' articulo.id %}" class="btn btn-success">Editar</a>
-            <a href="{% url 'articulos:delete-article' articulo.id %}" class="btn btn-danger">Eliminar posteo</a>
-        </div>
-    {% endif %}
-</article>
-
-<article class="container">
-    <h2>Comentarios</h2>
-    {% if user.is_authenticated %}
-        <form method="post" class="mb-4">{% csrf_token %}
-            {{ formulario_comentario }}
-            <button type="submit" class="btn btn-sm btn-primary">Comentar</button>
-        </form>
-    {% else %}
-        <p>Debes iniciar sesión para comentar.</p>
-        <a href="{% url 'login' %}" class="btn btn-sm btn-primary">Iniciar sesión</a>
-    {% endif %}
-    {% for comentario in articulo.comentario_set.all %}
-        <div class="card mb-3">
-            <div class="card-body">
-                <h5 class="card-title">{{comentario.user.username}}</h5>
-                <p class="card-text"><small>{{ articulo.creacion|date:"d/m/Y H:i" }}</small></p>
-                <p class="card-text">{{comentario.texto}}</p>
-                {% if user.is_superuser or user.es_colaborador or user == comentario.user %}
-                    <a href="{% url 'articulos:edit-comment' comentario.id %}" class="btn btn-sm btn-success">Editar</a>
-                    <a href="{% url 'articulos:delete-comment' comentario.id %}" class="btn btn-sm btn-danger">Eliminar</a>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-lg-8">
+            <article>
+                <header class="mb-4">
+                    <h1 class="fw-bolder mb-1">{{ articulo.titulo }}</h1>
+                    <div class="text-muted fst-italic mb-2">Publicado el {{ articulo.creacion|date:"d/m/Y" }} por {{ articulo.autor }}</div>
+                    <a class="badge bg-secondary text-decoration-none link-light" href="{% url 'articulos:category' articulo.categoria|slugify %}">{{ articulo.categoria }}</a>
+                    </ul>
+                    <p class="fs-5 mb-4">{{ articulo.bajada }}</p>
+                </header>
+                {% if articulo.imagen %}
+                    <img class="card-img-top" src="{{ articulo.imagen.url }}" class="card-img-top" alt="{{ articulo.titulo }}">
+                    {% if user.is_superuser or user.es_colaborador %}
+                        <form method="post" class="d-inline">
+                            {% csrf_token %}
+                            <input type="hidden" name="eliminar_imagen" value="1">
+                            <button type="submit" class="btn btn-danger">Eliminar Imagen</button>
+                        </form>
+                    {% endif %}
                 {% endif %}
-            </div>
-        </div>
-    {% empty %}
-        <p>No hay comentarios</p>
-    {% endfor %}
-</article>
+                <section class="mb-5">
+                    <p class="fs-5 mb-4">{{ articulo.contenido | safe }}</p>
+                {% if user.is_superuser or user.es_colaborador %}
+                    <div class="btn-group">
+                        <a href="{% url 'articulos:edit-article' articulo.id %}" class="btn btn-success">Editar Artículo</a>
+                        <a href="{% url 'articulos:delete-article' articulo.id %}" class="btn btn-danger">Eliminar Artículo</a>
+                    </div>
+                {% endif %}
+                {% if articulo.etiqueta.exists %}
+                <p>Etiquetas:</p>
+                <ul>
+                    {% for etiqueta in articulo.etiqueta.all %}
+                        <li class="badge bg-secondary text-decoration-none link-light">{{ etiqueta }}</li>
+                    {% endfor %}
+                {% endif %}
+                </section>
+            </article>
 
-{% endblock content %}
+            <section class="mb-5">
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <h2>Comentarios</h2>
+                        {% if user.is_authenticated %}
+                            <form method="post" class="mb-4">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    {{ formulario_comentario.as_p }}
+                                    <button type="submit" class="btn btn-primary" name="crear_comentario">Comentar</button>
+                                </div>
+                            </form>
+                        {% else %}
+                            <p>Debes <a href="{% url 'login' %}">iniciar sesión</a> para comentar.</p>
+                        {% endif %}
+                        {% for comentario in articulo.comentario_set.all %}
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ comentario.user.username }}</h5>
+                                    <div id="comentario_{{ comentario.id }}_view">
+                                        <p class="card-text">{{ comentario.texto }}</p>
+                                        {% if user.is_superuser or user.es_colaborador or user == comentario.user %}
+                                            <button type="button" class="btn btn-sm btn-success" onclick="habilitarEdicion({{ comentario.id }})">Editar</button>
+                                        {% endif %}
+                                    </div>
+                                    <div id="comentario_{{ comentario.id }}_edit" style="display: none;">
+                                        <form method="post" class="d-inline">
+                                            {% csrf_token %}
+                                            {% if user.is_superuser or user.es_colaborador or user == comentario.user %}
+                                                {% for key, form in formularios_editar_comentario.items %}
+                                                    {% if key == comentario.id %}
+                                                        {{ form.as_p }}
+                                                    {% endif %}
+                                                {% endfor %}
+                                                <input type="hidden" name="comentario_id" value="{{ comentario.id }}">
+                                                <button type="button" class="btn btn-secondary" onclick="cancelarEdicion({{ comentario.id }})">Cancelar</button>
+                                                <button type="submit" class="btn btn-primary" name="editar_comentario">Guardar cambios</button>
+                                            {% endif %}
+                                        </form>
+                                    </div>
+                                    {% if user.is_superuser or user.es_colaborador or user == comentario.user %}
+                                        <form method="post" class="d-inline">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="comentario_id" value="{{ comentario.id }}">
+                                            <button type="submit" class="btn btn-sm btn-danger" name="eliminar_comentario">Eliminar</button>
+                                        </form>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% empty %}
+                            <p class="card-text">No hay comentarios</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </section>
 
-{% block extra_js %}
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbH+8FAdyNW2DxH1uq9Wrj6w2Rs24q7tpj5skxIM7" crossorigin="anonymous"></script>
+<script>
+    function habilitarEdicion(comentarioId) {
+        document.getElementById('comentario_' + comentarioId + '_view').style.display = 'none';
+        document.getElementById('comentario_' + comentarioId + '_edit').style.display = 'block';
+    }
+
+    function cancelarEdicion(comentarioId) {
+        document.getElementById('comentario_' + comentarioId + '_view').style.display = 'block';
+        document.getElementById('comentario_' + comentarioId + '_edit').style.display = 'none';
+    }
+</script>
+
 {% endblock %}

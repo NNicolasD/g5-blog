@@ -1,10 +1,11 @@
 from django.shortcuts import render
 from django.views import generic
 from .models import Articulo, Categoria, Comentario
-from .forms import CrearArticuloForm, CrearComentarioForm, CrearCategoriaForm
+from .forms import CrearArticuloForm, CrearComentarioForm, CrearCategoriaForm, EditarComentarioForm
 from django.urls import reverse
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib import messages
 from .mixins import ArticulosMixin, ComentariosMixin
 
 # Create your views here.
@@ -51,35 +52,46 @@ class DetalleArticuloView(generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)    
         context['formulario_comentario'] = CrearComentarioForm()
+        context['formularios_editar_comentario'] = {comentario.id: EditarComentarioForm(instance=comentario) for comentario in self.object.comentario_set.all()}
         return context       
 
     def post(self, request, *args, **kwargs):
         articulo = self.get_object()
-        form = CrearComentarioForm(request.POST)
+        
+        if 'eliminar_imagen' in request.POST and (request.user.is_superuser or request.user.es_colaborador):
+            if articulo.imagen:
+                # Eliminar la imagen del artículo
+                articulo.imagen.delete(save=True)
+                return redirect('articulos:detail-article', pk=articulo.pk)
 
-        if form.is_valid():
-            comentario = form.save(commit=False)
-            comentario.user_id = self.request.user.id
-            comentario.articulo = articulo
-            comentario.save()
+        # Manejar el envío del formulario de creación de comentarios
+        if 'crear_comentario' in request.POST:
+            form = CrearComentarioForm(request.POST)
+            if form.is_valid():
+                comentario = form.save(commit=False)
+                comentario.user_id = self.request.user.id
+                comentario.articulo = articulo
+                comentario.save()
+                return redirect('articulos:detail-article', pk=articulo.pk)
+        
+        # Manejar el envío del formulario de edición de comentarios
+        elif 'editar_comentario' in request.POST:
+            comentario_id = request.POST.get('comentario_id')
+            comentario = get_object_or_404(Comentario, id=comentario_id)
+            form = EditarComentarioForm(request.POST, instance=comentario)
+            if form.is_valid():
+                form.save()
+                return redirect('articulos:detail-article', pk=articulo.pk)
+            
+        if 'eliminar_comentario' in request.POST:
+            comentario_id = request.POST.get('comentario_id')
+            comentario = get_object_or_404(Comentario, id=comentario_id)
+            comentario.delete()
+
             return redirect('articulos:detail-article', pk=articulo.pk)
-        else:
-            return super().get(request)
+
+        return super().get(request)
         
-class EditarComentarioView(ComentariosMixin, LoginRequiredMixin, generic.UpdateView):
-    model = Comentario
-    template_name = 'blog/edit_comment.html'     
-    fields = ['texto']  
-    
-    def get_success_url(self):
-        return reverse('articulos:detail-article', args = [self.object.articulo.id])
-        
-class EliminarComentarioView(ComentariosMixin, LoginRequiredMixin, generic.DeleteView):
-    model = Comentario
-    template_name = 'blog/delete_comment.html'       
-    
-    def get_success_url(self):
-        return reverse('articulos:detail-article', args = [self.object.articulo.id])
     
 class CategoryView(generic.TemplateView):
     template_name = 'blog/category.html'
