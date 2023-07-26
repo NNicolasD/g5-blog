@@ -5,8 +5,7 @@ from .forms import CrearArticuloForm, CrearComentarioForm, CrearCategoriaForm, E
 from django.urls import reverse
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib import messages
-from .mixins import ArticulosMixin, ComentariosMixin
+from .mixins import ArticulosMixin
 
 # Create your views here.
 
@@ -28,6 +27,34 @@ class ListaArticulosView(generic.ListView):
     template_name = 'blog/articles.html'
     context_object_name = 'articulos'
     paginate_by = 25
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categorias'] = Categoria.objects.all() 
+        return context
+    
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        categoria = self.request.GET.get('categoria')
+        antiguedad = self.request.GET.get('antiguedad')
+        orden = self.request.GET.get('orden')
+
+        if categoria:
+            queryset = queryset.filter(categoria__nombre__iexact=categoria)
+
+        if antiguedad:
+            if antiguedad == 'asc':
+                queryset = queryset.order_by('creacion')
+            elif antiguedad == 'desc':
+                queryset = queryset.order_by('-creacion')
+
+        if orden:
+            if orden == 'asc':
+                queryset = queryset.order_by('titulo')
+            elif orden == 'desc':
+                queryset = queryset.order_by('-titulo')
+
+        return queryset
 
 class EditarArticuloView(ArticulosMixin, LoginRequiredMixin, generic.UpdateView):
     model = Articulo
@@ -60,11 +87,9 @@ class DetalleArticuloView(generic.DetailView):
         
         if 'eliminar_imagen' in request.POST and (request.user.is_superuser or request.user.es_colaborador):
             if articulo.imagen:
-                # Eliminar la imagen del artículo
                 articulo.imagen.delete(save=True)
                 return redirect('articulos:detail-article', pk=articulo.pk)
 
-        # Manejar el envío del formulario de creación de comentarios
         if 'crear_comentario' in request.POST:
             form = CrearComentarioForm(request.POST)
             if form.is_valid():
@@ -74,7 +99,6 @@ class DetalleArticuloView(generic.DetailView):
                 comentario.save()
                 return redirect('articulos:detail-article', pk=articulo.pk)
         
-        # Manejar el envío del formulario de edición de comentarios
         elif 'editar_comentario' in request.POST:
             comentario_id = request.POST.get('comentario_id')
             comentario = get_object_or_404(Comentario, id=comentario_id)

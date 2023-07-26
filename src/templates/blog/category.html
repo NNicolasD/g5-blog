@@ -17,6 +17,7 @@
                             {% endif %}
                             <div class="card-body">
                                 <h5 class="card-title h4">{{ articulo.titulo }}</h5>
+                                <p class="card-text">{{ articulo.creacion|date:"d/m/Y" }}</p>
                                 <p class="card-text">{{ articulo.bajada }}</p>
                                 <p class="card-text">Autor: {{ articulo.autor }}</p>
                                 <a href="{% url 'articulos:detail-article' articulo.id %}" class="btn btn-primary">Ver más</a>

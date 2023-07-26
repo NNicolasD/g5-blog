@@ -8,6 +8,37 @@
             <a href="{% url 'articulos:create-article' %}" class="btn btn-success mb-3">Crear un nuevo artículo</a>
         {% endif %}
 
+        <form method="get" class="mb-3">
+            <div class="row">
+                <div class="col-md-4">
+                    <label for="categoria">Filtrar por categoría:</label>
+                    <select name="categoria" id="categoria" class="form-control">
+                        <option value="">Todas</option>
+                        {% for categoria in categorias %}
+                            <option value="{{ categoria.nombre }}" {% if request.GET.categoria == categoria.nombre %}selected{% endif %}>{{ categoria.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="antiguedad">Ordenar por antigüedad:</label>
+                    <select name="antiguedad" id="antiguedad" class="form-control">
+                        <option value="">Ninguno</option>
+                        <option value="asc" {% if request.GET.antiguedad == "asc" %}selected{% endif %}>Más antiguos primero</option>
+                        <option value="desc" {% if request.GET.antiguedad == "desc" %}selected{% endif %}>Más recientes primero</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="orden">Ordenar alfabéticamente:</label>
+                    <select name="orden" id="orden" class="form-control">
+                        <option value="">Ninguno</option>
+                        <option value="asc" {% if request.GET.orden == "asc" %}selected{% endif %}>Ascendente</option>
+                        <option value="desc" {% if request.GET.orden == "desc" %}selected{% endif %}>Descendente</option>
+                    </select>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary mt-3">Aplicar filtros</button>
+        </form>
+
         <div class="row">
             {% for articulo in articulos %}
                 <div class="col-lg-8">
@@ -17,6 +48,7 @@
                         {% endif %}
                         <div class="card-body">
                             <h2 class="card-title h4">{{ articulo.titulo }}</h2>
+                            <p class="card-text">{{ articulo.creacion|date:"d/m/Y" }}</p>
                             <p class="card-text">{{ articulo.bajada }}</p>
                             <p class="card-text">Autor: {{ articulo.autor }}</p>
                             <p class="card-text">Categoria: <a href="{% url 'articulos:category' articulo.categoria|slugify %}">{{ articulo.categoria }}</a></p>
