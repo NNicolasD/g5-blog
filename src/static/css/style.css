@@ -13,7 +13,86 @@ color-scheme:
     font-family: Roboto, Oxygen, sans-serif
 }
 
+
 body {
+    background: #FFFFFF;
     width: 100vw;
     height: 100vh;
+    position: relative;
 }
+
+.navbar {
+    background: #121D33 !important;
+    font-size: 1.2rem !important;
+}
+
+.navbar a {
+    background-color: #121D33;
+    color: #FFFFFF !important;
+}
+
+
+footer {
+    color: #FFFFFF;
+    width: 100vw !important;
+    background: #121D33;
+    position: absolute;
+}
+
+.user_card {
+    width: 350px;
+    margin-top: auto;
+    margin-bottom: auto;
+    background: #747f89;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    padding: 10px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    -webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    -moz-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border-radius: 5px;
+
+}
+
+.form_container {
+    margin-top: 20px;
+}
+
+#form-title{
+    color: #fff;
+    
+}
+
+.login_btn {
+    width: 100%;
+    background: #343a40 !important;
+    color: white !important;
+}
+.login_btn:focus {
+    box-shadow: none !important;
+    outline: 0px !important;
+}
+.login_container {
+    padding: 0 2rem;
+}
+.input-group-text {
+    background: #000 !important;
+    color: white !important;
+    border: 0 !important;
+    border-radius: 0.25rem 0 0 0.25rem !important;
+}
+.input_user,
+.input_pass:focus {
+    box-shadow: none !important;
+    outline: 0px !important;
+}
+
+#messages{
+    background-color: grey;
+    color: #fff;
+    padding: 10px;
+    margin-top: 10px;
+}
+
