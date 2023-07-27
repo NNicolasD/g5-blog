@@ -6,11 +6,13 @@ color-scheme:
 #FB2121
 */
 
+  @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@200;300;400;500&display=swap');
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Roboto, Oxygen, sans-serif
+    font-family: 'Prompt', sans-serif;
 }
 
 
@@ -19,6 +21,7 @@ body {
     width: 100vw;
     height: 100vh;
     position: relative;
+    overflow-x: hidden;
 }
 
 .navbar {
@@ -31,12 +34,27 @@ body {
     color: #FFFFFF !important;
 }
 
+.nav-link:hover {
+    color: rgb(112, 17, 112) !important;
+  }
+
+.navbar-nav .dropdown-menu {
+    position: absolute;
+    float: inline-start;
+    left: -30px !important;
+    background-color: #121D33;
+}
+
+.dropdown-item:focus, .dropdown-item:hover {
+  color: #16181b;
+  text-decoration: none;
+  color: rgb(112, 17, 112) !important;
+  background-color: transparent;
+}
 
 footer {
     color: #FFFFFF;
-    width: 100vw !important;
     background: #121D33;
-    position: absolute;
 }
 
 .user_card {
@@ -95,4 +113,20 @@ footer {
     padding: 10px;
     margin-top: 10px;
 }
+
+/* Acerca de */
+
+.about {
+    background: #FFFFFF;
+    padding: 1rem;
+    filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.5));
+    border-radius: 10px;
+}
+
+.list-group-item:hover {
+    z-index: 1;
+    text-decoration: none;
+    background-color: #8b13cf;
+    color: white;
+  }
 
