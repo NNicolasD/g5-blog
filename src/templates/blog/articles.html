@@ -13,7 +13,7 @@
                 {% for articulo in articulos %}
                 {% if forloop.first %}
                 <div class="carousel-item {% if forloop.first %} active {% endif %}">
-                    <img src="{{ articulo.imagen.url }}" class="d-block w-100" alt="">
+                    <a href="{% url 'articulos:detail-article' articulo.id %}"><img src="{{ articulo.imagen.url }}" class="d-block w-100" alt=""/></a>
                     <div class="carousel-caption d-none d-md-block">
                         <h3 class="text-center">{{ articulo.titulo }}</h3>
                         <h5 class="text-justify fw-light">{{ articulo.bajada }}</h5>
@@ -21,7 +21,7 @@
                 </div>
                 {% else %}
                 <div class="carousel-item {% if forloop.first %} active {% endif %}">
-                    <img src="{{ articulo.imagen.url }}" class="d-block w-100" alt="">
+                    <a href="{% url 'articulos:detail-article' articulo.id %}"><img src="{{ articulo.imagen.url }}" class="d-block w-100" alt=""/></a>
                     <div class="carousel-caption d-none d-md-block">
                         <h3 class="text-center">{{ articulo.titulo }}</h3>
                         <h5 class="text-justify fw-light">{{ articulo.bajada }}</h5>
