@@ -157,3 +157,38 @@ footer {
     margin-bottom: 6rem !important;
 }
 
+/* Articles */
+
+.carousel-title h2{
+    color: rgb(104, 7, 134);
+}
+
+.carousel-inner {
+    border-radius: 1rem;
+}
+
+.carousel .carousel-item {
+    height: 50vh;
+  }
+  
+.carousel-item img {
+      position: absolute;
+      object-fit: cover;
+      top: -10vh;
+      left: 0;
+      min-height: 40vh;
+  }
+
+.carousel-caption {
+    top: 10vh;
+    bottom: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 1rem;
+    border-radius: 1rem;
+
+}
+
+.articles-title {
+    color: rgb(104, 7, 134)
+}
+

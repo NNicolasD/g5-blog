@@ -1,56 +1,99 @@
 {% extends 'base.html' %}
 {% block title %}Artículos{% endblock %}
 {% block content %}
-    <div class="container">
-        <h2 class="mt-3">Lista de artículos</h2>
 
-        {% if user.is_superuser or user.es_colaborador %}
-            <a href="{% url 'articulos:create-article' %}" class="btn btn-success mb-3">Crear un nuevo artículo</a>
-        {% endif %}
 
-        <div class="row">
-            {% for articulo in articulos %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="carousel-title text-center mb-3">
+            <h2>Últimos artículos</h2>
+        </div>
+        <div id="CarouselWithControls" class="carousel slide justify-content-center" data-ride="carousel">
+            <div class="carousel-inner">
+                {% for articulo in articulos %}
+                {% if forloop.first %}
+                <div class="carousel-item {% if forloop.first %} active {% endif %}">
+                    <img src="{{ articulo.imagen.url }}" class="d-block w-100" alt="">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h3 class="text-center">{{ articulo.titulo }}</h3>
+                        <h5 class="text-justify fw-light">{{ articulo.bajada }}</h5>
+                    </div>
+                </div>
+                {% else %}
+                <div class="carousel-item {% if forloop.first %} active {% endif %}">
+                    <img src="{{ articulo.imagen.url }}" class="d-block w-100" alt="">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h3 class="text-center">{{ articulo.titulo }}</h3>
+                        <h5 class="text-justify fw-light">{{ articulo.bajada }}</h5>
+                    </div>
+                </div>
+                {% endif %}
+                <a class="carousel-control-prev" href="#CarouselWithControls" role="button" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#CarouselWithControls" role="button" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+        <div class="container articles-title">
+            <h2 class="mt-4 text-center">Todos los artículos</h2>
+
+            {% if user.is_superuser or user.es_colaborador %}
+            <a href="{% url 'articulos:create-article' %}" class="btn mb-3">Añadir artículo</a>
+            {% endif %}
+
+            <div class="row">
+                {% for articulo in articulos %}
                 <div class="col-md-6 mb-4">
                     <div class="card">
                         {% if articulo.imagen %}
-                            <img src="{{ articulo.imagen.url }}" class="card-img-top" alt="Articulo Image">
+                        <img src="{{ articulo.imagen.url }}" class="card-img-top" alt="Articulo Image">
                         {% endif %}
                         <div class="card-body">
                             <h5 class="card-title">{{ articulo.titulo }}</h5>
                             <p class="card-text">{{ articulo.bajada }}</p>
                             <p class="card-text">Autor: {{ articulo.autor }}</p>
-                            <p class="card-text">Categoria: <a href="{% url 'articulos:category' articulo.categoria|slugify %}">{{ articulo.categoria }}</a></p>
-                            <a href="{% url 'articulos:detail-article' articulo.id %}" class="btn btn-success">Ver más</a>
+                            <p class="card-text">Categoria: <a href="{% url 'articulos:category' articulo.categoria|slugify %}">
+                                {{ articulo.categoria }}</a></p>
+                            <a href="{% url 'articulos:detail-article' articulo.id %}" class="btn btn-success">Ver
+                                más</a>
                             {% if user.is_superuser or user.es_colaborador %}
-                                <a href="{% url 'articulos:edit-article' articulo.id %}" class="btn btn-success">Editar</a>
-                                <a href="{% url 'articulos:delete-article' articulo.id %}" class="btn btn-danger">Eliminar posteo</a>
+                            <a href="{% url 'articulos:edit-article' articulo.id %}" class="btn btn-success">Editar</a>
+                            <a href="{% url 'articulos:delete-article' articulo.id %}" class="btn btn-danger">Eliminar
+                                posteo</a>
                             {% endif %}
                         </div>
                     </div>
                 </div>
-            {% empty %}
+                {% empty %}
                 <p>No hay artículos disponibles.</p>
-            {% endfor %}
-        </div>
-        
-        {% if is_paginated %}
+                {% endfor %}
+            </div>
+
+            {% if is_paginated %}
             <div class="pagination justify-content-center">
                 {% if page_obj.has_previous %}
-                    <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-secondary">Anterior</a>
+                <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-secondary">Anterior</a>
                 {% endif %}
 
                 {% for page in paginator.page_range %}
-                    {% if page == page_obj.number %}
-                        <span class="btn btn-primary active">{{ page }}</span>
-                    {% else %}
-                        <a href="?page={{ page }}" class="btn btn-secondary">{{ page }}</a>
-                    {% endif %}
+                {% if page == page_obj.number %}
+                <span class="btn btn-primary active">{{ page }}</span>
+                {% else %}
+                <a href="?page={{ page }}" class="btn btn-secondary">{{ page }}</a>
+                {% endif %}
                 {% endfor %}
 
                 {% if page_obj.has_next %}
-                    <a href="?page={{ page_obj.next_page_number }}" class="btn btn-secondary">Siguiente</a>
+                <a href="?page={{ page_obj.next_page_number }}" class="btn btn-secondary">Siguiente</a>
                 {% endif %}
             </div>
-        {% endif %}
-    </div>
+            {% endif %}
+        </div>
 {% endblock content %}
