@@ -117,8 +117,8 @@ footer {
 /* Acerca de */
 
 .about {
-    background: #FFFFFF;
-    padding: 1rem;
+    background: #ffffff;
+    padding: 2.5rem;
     filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.5));
     border-radius: 10px;
 }
@@ -130,3 +130,17 @@ footer {
     color: white;
   }
 
+/*Contacto*/
+
+.contact {
+    background: #FFFFFF;
+    padding: 1rem;
+    filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.5));
+    border-radius: 10px;
+}
+
+.btn {
+    background-color: #8b13cf !important;
+    color: white !important;
+    border-color: #8b13cf !important;
+}
