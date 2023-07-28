@@ -79,44 +79,33 @@
             {% endif %}
 
             <div class="row">
-                {% for articulo in articulos %}
-                <div class="col-md-6 mb-4">
-                    <div class="card">
-                        {% if articulo.imagen %}
-                            <img src="{{ articulo.imagen.url }}" class="article-image" alt="Articulo Image">
-                        {% endif %}
-                        <div class="card-body">
-                            <h2 class="card-title h4">{{ articulo.titulo }}</h2>
-                            <p class="card-text">{{ articulo.creacion|date:"d/m/Y" }}</p>
-                            <p class="card-text">{{ articulo.bajada }}</p>
-                            <p class="card-text">Autor: {{ articulo.autor }}</p>
-                            <p class="card-text">Categoria: <a href="{% url 'articulos:category' articulo.categoria|slugify %}">{{ articulo.categoria }}</a></p>
-                            <a href="{% url 'articulos:detail-article' articulo.id %}" class="btn btn-success">Ver más</a>
-                            {% if user.is_superuser or user.es_colaborador %}
-                                <a href="{% url 'articulos:edit-article' articulo.id %}" class="btn btn-success">Editar</a>
-                                <a href="{% url 'articulos:delete-article' articulo.id %}" class="btn btn-danger">Eliminar</a>
-                            {% endif %}
+                {% if articulos %}
+                    {% for articulo in articulos %}
+                        <div class="col-md-6 mb-4">
+                            <div class="card">
+                                {% if articulo.imagen %}
+                                    <img src="{{ articulo.imagen.url }}" class="article-image" alt="Articulo Image">
+                                {% endif %}
+                                <div class="card-body">
+                                    <h2 class="card-title h4">{{ articulo.titulo }}</h2>
+                                    <p class="card-text">{{ articulo.creacion|date:"d/m/Y" }}</p>
+                                    <p class="card-text">{{ articulo.bajada }}</p>
+                                    <p class="card-text">Autor: {{ articulo.autor }}</p>
+                                    <p class="card-text">Categoria: <a href="{% url 'articulos:category' articulo.categoria|slugify %}">{{ articulo.categoria }}</a></p>
+                                    <a href="{% url 'articulos:detail-article' articulo.id %}" class="btn btn-success">Ver más</a>
+                                    {% if user.is_superuser or user.es_colaborador %}
+                                        <a href="{% url 'articulos:edit-article' articulo.id %}" class="btn btn-success">Editar</a>
+                                        <a href="{% url 'articulos:delete-article' articulo.id %}" class="btn btn-danger">Eliminar</a>
+                                    {% endif %}
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                {% empty %}
+                    {% endfor %}
+                {% else %}
                     <p>No hay artículos disponibles.</p>
-                {% block footer %}
-                <footer class="d-flex justify-content-between mt-3 px-4 py-3 fixed-footer">
-                    <div>
-                      <p class="mb-0">Informatorio | Grupo 5</p>
-                    </div>
-                    <div>
-                      <ul class="d-flex gap-3 list-unstyled mb-0">
-                        <li><a href="#"><i class="link-light bi-facebook"></i></a></li>
-                        <li><a href="#"><i class="link-light bi-twitter"></i></a></li>
-                        <li><a href="#"><i class="link-light bi-instagram"></i></a></li>
-                      </ul>
-                    </div>
-                  </footer>
-                {% endblock %}
-                {% endfor %}
+                {% endif %}
             </div>
+
 
             {% if is_paginated %}
             <div class="pagination justify-content-center">
