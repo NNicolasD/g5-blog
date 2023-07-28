@@ -10,7 +10,7 @@ User = settings.AUTH_USER_MODEL
 
 
 class NombreEstado(models.Model):
-    nombre = models.CharField(max_length=200, unique=True)
+    nombre = models.CharField(max_length=255, unique=True)
     activo = models.BooleanField(default=True)
     creacion = models.DateTimeField(auto_now_add=True)
     actualizacion = models.DateTimeField(auto_now=True)
@@ -32,10 +32,10 @@ class Etiqueta(NombreEstado):
 
 
 class Articulo(models.Model):
-    titulo = models.CharField(max_length=250)
-    bajada = models.CharField(max_length=600)
+    titulo = models.CharField(max_length=255)
+    bajada = models.CharField(max_length=255)
     contenido = RichTextField()
-    imagen = models.ImageField(upload_to='articulo', null=True)
+    imagen = models.ImageField(upload_to='articulo', null=True, blank=True)
     publicado = models.BooleanField(default=True)
     categoria = models.ForeignKey(Categoria, on_delete=models.SET_NULL, null=True)
     autor = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
@@ -59,7 +59,7 @@ class Articulo(models.Model):
 class Comentario(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     articulo = models.ForeignKey(Articulo, on_delete=models.CASCADE)
-    texto = models.CharField(max_length=500, blank=True, default="")
+    texto = models.CharField(max_length=255, blank=True)
     
     creacion = models.DateTimeField(auto_now_add=True)
     actualizacion = models.DateTimeField(auto_now=True)

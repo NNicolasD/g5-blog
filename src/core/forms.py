@@ -7,8 +7,23 @@ class ContactoForm(forms.ModelForm):
         model = Contacto
         fields = "__all__"
         
-        widgets = {
-            'nombre': forms.TextInput(attrs={'class': 'form-control'}),
-            'correo': forms.EmailInput(attrs={'class': 'form-control'}),
-            'mensaje': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
+        labels = {
+            'nombre': 'Nombre',
+            'correo': 'Correo electrónico',
+            'mensaje': 'Mensaje'
         }
+        
+        widgets = {
+            'nombre' : forms.TextInput(attrs= {'class' : 'form-control','placeholder': 'Juan Perez','required': True}),
+            'correo' : forms.EmailInput(attrs= {'class' : 'form-control','placeholder': 'juanperez@mail.com','required': True}),
+            'mensaje': forms.Textarea(attrs={'class': 'form-control','rows': 5,'required': True})
+        }
+
+        message = forms.CharField(
+            label="Mensaje",
+            widget=forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 5,
+                'required': True,
+            })
+        )

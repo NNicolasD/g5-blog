@@ -6,7 +6,21 @@
     <form method="post" enctype="multipart/form-data">{% csrf_token %}
 
         {{form.as_p}}
-        <button type="submit">Guardar cambios</button>
+        <button type="submit" class="btn btn-success">Guardar cambios</button>
 
     </form>
+    {% block footer %}
+    <footer class="d-flex justify-content-between mt-3 px-4 py-3 fixed-footer">
+        <div>
+        <p class="mb-0">Informatorio | Grupo 5</p>
+        </div>
+        <div>
+        <ul class="d-flex gap-3 list-unstyled mb-0">
+            <li><a href="#"><i class="link-light bi-facebook"></i></a></li>
+            <li><a href="#"><i class="link-light bi-twitter"></i></a></li>
+            <li><a href="#"><i class="link-light bi-instagram"></i></a></li>
+        </ul>
+        </div>
+    </footer>
+    {% endblock %}
 {% endblock content %}

@@ -3,6 +3,9 @@
 {% block content %}
   
     <div class="container category-list mt-5">
+        {% if user.is_superuser or user.es_colaborador %}
+            <a href="{% url 'articulos:create-category' %}" class="btn btn-success mb-3">Crear categoría</a>
+        {% endif %}
         {% if category_list %} 
         <h2 style="color: rgb(104, 7, 134)">Categorías</h2>
         <ul class="list-group">
@@ -10,17 +13,31 @@
                 <li class="list-group-item">
                     <h4>
                         <a href="{% url 'articulos:category' category.nombre|slugify %}">{{ category.nombre }}</a>
+                        {% if user.is_superuser or user.es_colaborador %}
+                            <a href="{% url 'articulos:edit-category' category.id %}" class="btn btn-success mb-3">Editar</a>
+                            <a href="{% url 'articulos:delete-category' category.id %}" class="btn btn-danger mb-3">Eliminar</a>
+                        {% endif %}
                     </h4>
                 </li>
             {% endfor %}
         </ul>
     </div>
-{% else %}
-        <h2>No hay categorías</h2>
-        {% if user.is_superuser or user.es_colaborador %}
-        <a href="{% url 'articulos:create-category' %}" class="btn btn-success mb-3">Crear categoría</a>
-        {% endif %}
-    </div>
+        {% else %}
+            <h2>No hay categorías</h2>
+            {% block footer %}
+            <footer class="d-flex justify-content-between mt-3 px-4 py-3 fixed-footer">
+                <div>
+                <p class="mb-0">Informatorio | Grupo 5</p>
+                </div>
+                <div>
+                <ul class="d-flex gap-3 list-unstyled mb-0">
+                    <li><a href="#"><i class="link-light bi-facebook"></i></a></li>
+                    <li><a href="#"><i class="link-light bi-twitter"></i></a></li>
+                    <li><a href="#"><i class="link-light bi-instagram"></i></a></li>
+                </ul>
+                </div>
+            </footer>
+            {% endblock %}
 {% endif %}
 
 {% endblock content %}

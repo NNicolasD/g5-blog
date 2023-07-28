@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-
 {% block title %}Eliminar Categoría{% endblock %}
 
 {% block content %}
@@ -10,8 +9,28 @@
                     {% csrf_token %}
                     <h2>¿Estás seguro que deseas eliminar esta categoría?</h2>
                     <button type="submit" class="btn btn-danger">Eliminar</button>
+                    <button type="button" class="btn btn-secondary" onclick="goBack()">Cancelar</button>
                 </form>
             </div>
         </div>
     </div>
+    {% block footer %}
+    <footer class="d-flex justify-content-between mt-3 px-4 py-3 fixed-footer">
+        <div>
+        <p class="mb-0">Informatorio | Grupo 5</p>
+        </div>
+        <div>
+        <ul class="d-flex gap-3 list-unstyled mb-0">
+            <li><a href="#"><i class="link-light bi-facebook"></i></a></li>
+            <li><a href="#"><i class="link-light bi-twitter"></i></a></li>
+            <li><a href="#"><i class="link-light bi-instagram"></i></a></li>
+        </ul>
+        </div>
+    </footer>
+    {% endblock %}
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
 {% endblock content %}

@@ -61,7 +61,7 @@
                         {% for comentario in articulo.comentario_set.all %}
                             <div class="card mb-3">
                                 <div class="card-body">
-                                    <h5 class="card-title">{{ comentario.user.username }}</h5>
+                                    <h5 class="card-title">{{ comentario.user.username }} <small>{{ comentario.creacion|date:"d/m/Y H:i:s" }} </small></h5>
                                     <div id="comentario_{{ comentario.id }}_view">
                                         <p class="card-text">{{ comentario.texto }}</p>
                                         {% if user.is_superuser or user.es_colaborador or user == comentario.user %}

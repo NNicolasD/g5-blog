@@ -1,6 +1,5 @@
 from django.views import generic
 from django.contrib import messages
-from django.shortcuts import redirect
 from django.urls import reverse
 from articulos.models import Articulo
 from core.models import Contacto
@@ -11,7 +10,7 @@ class InicioView(generic.TemplateView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['articulos'] = Articulo.objects.order_by('-creacion')[:3]
+        context['articulos'] = Articulo.objects.order_by('-creacion')[:2]
         return context
     
 class AcercaDeNosotrosView(generic.TemplateView):
