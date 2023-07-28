@@ -17,6 +17,9 @@
     </div>
 {% else %}
         <h2>No hay categorías</h2>
+        {% if user.is_superuser or user.es_colaborador %}
+        <a href="{% url 'articulos:create-category' %}" class="btn btn-success mb-3">Crear categoría</a>
+        {% endif %}
     </div>
 {% endif %}
 

@@ -51,7 +51,7 @@ class Articulo(models.Model):
         return self.titulo
 
     def get_absolute_url(self):
-        return reverse('blog:details', kwargs={ 'id': self.id })
+        return reverse('articulos:detail-article', kwargs={ 'id': self.id })
 
     def get_comments(self):
         return self.comentario__set.all()

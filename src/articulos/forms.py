@@ -1,5 +1,5 @@
 from django import forms
-from .models import Articulo, Comentario
+from .models import Articulo, Comentario, Categoria
 from ckeditor.widgets import CKEditorWidget
 
 class CrearArticuloForm(forms.ModelForm):    
@@ -7,13 +7,12 @@ class CrearArticuloForm(forms.ModelForm):
     class Meta:
         model = Articulo
         fields = '__all__'
-        exclude = ('autor', 'etiqueta',)
+        exclude = ('autor', 'etiqueta', 'publicado')
         
         widgets = {
             'titulo' : forms.TextInput(attrs= {'class' : 'form-control'}),
             'bajada' : forms.TextInput(attrs= {'class' : 'form-control'}),
             'imagen': forms.FileInput(attrs={'class': 'form-control-file'}),
-            'publicado': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'categoria' : forms.Select(attrs={'class' : 'form-select'}),
         }
         
@@ -28,4 +27,26 @@ class CrearComentarioForm(forms.ModelForm):
         
         widgets = {
             'texto' : forms.TextInput(attrs= {'class' : 'form-control', 'placeholder' : 'Escribe un comentario'})
+        }
+        
+        
+class EditarComentarioForm(forms.ModelForm):
+    class Meta:
+        model = Comentario
+        fields = ['texto']
+        exclude = ['user_id']
+
+        
+        labels = {
+            'texto': ''
+        }
+        
+class CrearCategoriaForm(forms.ModelForm):
+    class Meta:
+        model = Categoria
+        fields = ['nombre']
+        
+        
+        widgets = {
+            'texto' : forms.TextInput(attrs= {'class' : 'form-control'})
         }

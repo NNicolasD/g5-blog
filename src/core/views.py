@@ -1,7 +1,10 @@
 from django.views import generic
 from django.contrib import messages
 from django.shortcuts import redirect
+from django.urls import reverse
 from articulos.models import Articulo
+from core.models import Contacto
+from .forms import ContactoForm
 
 class InicioView(generic.TemplateView):
     template_name = 'blog/home.html'
@@ -14,9 +17,14 @@ class InicioView(generic.TemplateView):
 class AcercaDeNosotrosView(generic.TemplateView):
     template_name = 'blog/about.html'
     
-class ContactoView(generic.TemplateView):
+class ContactoView(generic.CreateView):
+    model = Contacto
+    form_class = ContactoForm
     template_name = 'blog/contact.html'
+    
+    def get_success_url(self):
+        return reverse('blog:contact')
 
-    def post(self, request, *args, **kwargs):
-        messages.success(request, 'Mensaje enviado con éxito.')
-        return redirect('blog:contact')
+    def form_valid(self, form):
+        messages.success(self.request, 'Mensaje enviado con éxito.')
+        return super().form_valid(form)

@@ -1,11 +1,11 @@
 from django.shortcuts import render
 from django.views import generic
 from .models import Articulo, Categoria, Comentario
-from .forms import CrearArticuloForm, CrearComentarioForm
+from .forms import CrearArticuloForm, CrearComentarioForm, CrearCategoriaForm, EditarComentarioForm
 from django.urls import reverse
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .mixins import ArticulosMixin, ComentariosMixin
+from .mixins import ArticulosMixin
 
 # Create your views here.
 
@@ -27,6 +27,34 @@ class ListaArticulosView(generic.ListView):
     template_name = 'blog/articles.html'
     context_object_name = 'articulos'
     paginate_by = 25
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categorias'] = Categoria.objects.all() 
+        return context
+    
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        categoria = self.request.GET.get('categoria')
+        antiguedad = self.request.GET.get('antiguedad')
+        orden = self.request.GET.get('orden')
+
+        if categoria:
+            queryset = queryset.filter(categoria__nombre__iexact=categoria)
+
+        if antiguedad:
+            if antiguedad == 'asc':
+                queryset = queryset.order_by('creacion')
+            elif antiguedad == 'desc':
+                queryset = queryset.order_by('-creacion')
+
+        if orden:
+            if orden == 'asc':
+                queryset = queryset.order_by('titulo')
+            elif orden == 'desc':
+                queryset = queryset.order_by('-titulo')
+
+        return queryset
 
 class EditarArticuloView(ArticulosMixin, LoginRequiredMixin, generic.UpdateView):
     model = Articulo
@@ -51,35 +79,43 @@ class DetalleArticuloView(generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)    
         context['formulario_comentario'] = CrearComentarioForm()
+        context['formularios_editar_comentario'] = {comentario.id: EditarComentarioForm(instance=comentario) for comentario in self.object.comentario_set.all()}
         return context       
 
     def post(self, request, *args, **kwargs):
         articulo = self.get_object()
-        form = CrearComentarioForm(request.POST)
+        
+        if 'eliminar_imagen' in request.POST and (request.user.is_superuser or request.user.es_colaborador):
+            if articulo.imagen:
+                articulo.imagen.delete(save=True)
+                return redirect('articulos:detail-article', pk=articulo.pk)
 
-        if form.is_valid():
-            comentario = form.save(commit=False)
-            comentario.user_id = self.request.user.id
-            comentario.articulo = articulo
-            comentario.save()
+        if 'crear_comentario' in request.POST:
+            form = CrearComentarioForm(request.POST)
+            if form.is_valid():
+                comentario = form.save(commit=False)
+                comentario.user_id = self.request.user.id
+                comentario.articulo = articulo
+                comentario.save()
+                return redirect('articulos:detail-article', pk=articulo.pk)
+        
+        elif 'editar_comentario' in request.POST:
+            comentario_id = request.POST.get('comentario_id')
+            comentario = get_object_or_404(Comentario, id=comentario_id)
+            form = EditarComentarioForm(request.POST, instance=comentario)
+            if form.is_valid():
+                form.save()
+                return redirect('articulos:detail-article', pk=articulo.pk)
+            
+        if 'eliminar_comentario' in request.POST:
+            comentario_id = request.POST.get('comentario_id')
+            comentario = get_object_or_404(Comentario, id=comentario_id)
+            comentario.delete()
+
             return redirect('articulos:detail-article', pk=articulo.pk)
-        else:
-            return super().get(request)
+
+        return super().get(request)
         
-class EditarComentarioView(ComentariosMixin, LoginRequiredMixin, generic.UpdateView):
-    model = Comentario
-    template_name = 'blog/edit_comment.html'     
-    fields = ['texto']  
-    
-    def get_success_url(self):
-        return reverse('articulos:detail-article', args = [self.object.articulo.id])
-        
-class EliminarComentarioView(ComentariosMixin, LoginRequiredMixin, generic.DeleteView):
-    model = Comentario
-    template_name = 'blog/delete_comment.html'       
-    
-    def get_success_url(self):
-        return reverse('articulos:detail-article', args = [self.object.articulo.id])
     
 class CategoryView(generic.TemplateView):
     template_name = 'blog/category.html'
@@ -101,3 +137,26 @@ class CategoryListView(generic.ListView):
     def get_queryset(self):
         queryset = super().get_queryset()
         return queryset
+    
+class CrearCategoriaView(ArticulosMixin, LoginRequiredMixin, generic.CreateView):
+    model = Categoria
+    template_name = 'blog/create_category.html'
+    form_class = CrearCategoriaForm
+
+    def get_success_url(self):
+        return reverse('articulos:category-list')
+    
+class EditarCategoriaView(ArticulosMixin, LoginRequiredMixin, generic.UpdateView):
+    model = Categoria
+    template_name = 'blog/edit_category.html'
+    form_class = CrearCategoriaForm
+    
+    def get_success_url(self):
+        return reverse('articulos:category-list') 
+    
+class EliminarCategoriaView(ArticulosMixin, LoginRequiredMixin, generic.DeleteView):
+    model = Categoria
+    template_name = 'blog/delete_category.html'
+
+    def get_success_url(self):
+        return reverse('articulos:category-list')
