@@ -1,32 +1,37 @@
 {% extends 'base.html' %}
 
-{% block title %}Acerca de Nosotros{% endblock %}
+{% block title %}Equipo del Grupo 5{% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="row">
-        <div class="col-12">
-            <h2>Acerca de nuestro blog DeFi</h2>
+
+<main>
+    <div class="container">
+        <div class="about">
+            <h1 class="text-center display-5 fw-bold"><span style="color: rgb(104, 7, 134)">Acerca de</span> DeFi Blog</h1>
             <section>
-                <p>En este blog, te proporcionamos información sobre Finanzas Descentralizadas (DeFi), una nueva y emocionante tendencia en el mundo financiero.</p>
+                <p class="fs-6 text-justify">En este blog, te proporcionamos información sobre Finanzas Descentralizadas (DeFi), una nueva y emocionante tendencia en el mundo financiero.</p>
             </section>
             <section>
-                <h2>Descripción del blog</h2>
-                <p>Nuestro objetivo es educar a nuestros lectores sobre las diferentes plataformas y protocolos DeFi, sus ventajas y riesgos, así como proporcionar noticias e información relevante sobre este campo en constante evolución.</p>
+                <h2><span style="color: rgb(104, 7, 134)">Misión de</span> DeFi Blog</h2>
+                <p class="fs-6 text-justify">Nuestro objetivo es educar a nuestros lectores sobre las diferentes plataformas y protocolos DeFi, sus ventajas y riesgos, así como proporcionar noticias e información relevante sobre este campo en constante evolución.</p>
             </section>
-            <section>
-                <h2>Equipo detrás del blog</h2>
+            <div class="team">
+                <div>
+                    <h2 class="text-center" style="color: rgb(104, 7, 134)">Equipo G5</h2>
+                </div>
+                <div class="members text-center">
                 <ul class="list-group">
                     <li class="list-group-item">Alejandro Lencina</li>
                     <li class="list-group-item">Carlos Fernando Maciel</li>
-                    <li class="list-group-item">Dellamea Nicolas</li>
                     <li class="list-group-item">Hector Carlos Larre</li>
                     <li class="list-group-item">Lucas Gabriel Gomez</li>
                     <li class="list-group-item">Matheo Cardozo</li>
                     <li class="list-group-item">Miguel Angel Ivanoff</li>
+                    <li class="list-group-item">Nicolas Dellamea</li>
                 </ul>
-            </section>
+                </div>
+            </div>
         </div>
     </div>
-</div>
+</main>
 {% endblock %}

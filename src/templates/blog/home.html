@@ -1,26 +1,24 @@
 {% extends "base.html" %}
 {% block title %} Inicio {% endblock  %}
 {% block content %}
+{% load static %}
 
 
 <main>
+    <div class="container container-hero">
+        <img class="hero" src="{% static 'img/hero.png' %}" alt="">
+    </div>
     <section>
-        <header class="py-5 bg-light border-bottom mb-4">
-            <div class="container">
-                <div class="text-center my-5">
-                    <h1 class="fw-bolder">Bienvenido al Blog DeFiVerse</h1>
-                </div>
-            </div>
-        </header>
         <div class="container">
+        <h1 class="my-4 text-center"><span style="color: rgb(104, 7, 134)">Bienvenido al</span> DeFi Blog</h2>
         
         {% if articulos %}          
 
-        <h2 class="mt-3">Artículos Recientes</h2>
+        <h3 class="mt-3" style="color: rgb(104, 7, 134)">Artículos Recientes</h3>
         <div class="row">
             {% for articulo in articulos %}
-                <div class="col-lg-8">
-                    <div class="card mb-4">
+            <div class="col-md-6 mb-4">
+                <div class="card">
                         {% if articulo.imagen %}
                             <img class="card-img-top" src="{{ articulo.imagen.url }}" class="card-img-top" alt="{{ articulo.titulo }}">
                         {% endif %}
