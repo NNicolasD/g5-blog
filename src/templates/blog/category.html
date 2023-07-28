@@ -11,8 +11,8 @@
     </div>
             <div class="row mx-5">
                 {% for articulo in category_article %}
-                    <div class="col-lg-8">
-                        <div class="card mb-4">
+                <div class="col-md-6 mb-4">
+                    <div class="card">
                             {% if articulo.imagen %}
                                 <img class="card-img-top" src="{{ articulo.imagen.url }}" class="card-img-top" alt="Articulo Image">
                             {% endif %}
